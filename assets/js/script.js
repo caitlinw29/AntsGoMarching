@@ -1,11 +1,15 @@
 const grid = document.querySelector('.grid');
 const startButton = document.getElementById('start');
-const score = document.getElementById('score');
+const scoreDisplay = document.getElementById('score');
 let squares = [];
 let currentSnake = [2, 1, 0];
 let direction = 1;
 const width = 10;
 let appleIndex = 0;
+let score = 0;
+let intervalTime = 1000;
+let speed = 0.9;
+let timerId = 0;
 
 function createGrid() {
     //create 100 of these elements with a for loop
@@ -26,6 +30,29 @@ createGrid();
 //Colors the background of the current snake by adding the snake class to the matching index in the squares array
 currentSnake.forEach(index => squares[index].classList.add('snake'));
 
+function startGame() {
+  //reset variables if using button as a "restart"
+  //remove the snake
+  currentSnake.forEach(index => squares[index].classList.remove('snake'));
+  //remove the apple
+  squares[appleIndex].classList.remove('apple');
+
+  clearInterval(timerId);
+  currentSnake = [2,1,0];
+  score = 0;
+  //re add new score to browser
+  scoreDisplay.textContent = score;
+
+  direction = 1;
+  intervalTime = 1000;
+  generateApples();
+  //readd the class of snake to our new currentSnake
+  currentSnake.forEach(index => squares[index].classList.add('snake'));
+
+  //Starts Game
+  timerId = setInterval(move, intervalTime);
+} 
+
 function move() {
 
   if (
@@ -39,26 +66,37 @@ function move() {
   }
 
   
-
   //remove last element from our currentSnake array
   const tail = currentSnake.pop();
   //remove styling from last element
   squares[tail].classList.remove('snake');
   //add sqaure in direction we are heading
   currentSnake.unshift(currentSnake[0] + direction);
-  //add styling so we can see it
+  //add styling so we can see snake
+  //...but first check if snake has hit any food
+  if (squares[currentSnake[0]].classList.contains('apple')) {
+    //remove the class of apple
+    squares[currentSnake[0]].classList.remove('apple');
+    //grow our snake by adding class of snake to it
+    squares[tail].classList.add('snake');
+    //grow our snake array (otherwise tail gets left behind)
+    currentSnake.push(tail);
+    //generate a new apple
+    generateApples();
+    //add one to the score
+    score++;
+    //display our score
+    scoreDisplay.textContent = score;
+    //speed up our snake
+    clearInterval(timerId);
+    intervalTime = intervalTime * speed;
+    timerId = setInterval(move, intervalTime);
+  }
 
-
-
-
-
-  
   squares[currentSnake[0]].classList.add('snake');
 
 }
-move();
 
-let timerId = setInterval(move, 1000);
 
 function generateApples() {
   //generate a random number while the number contains the snake...
@@ -68,7 +106,7 @@ function generateApples() {
   //...then add the apple to the game when it is in a good spot
   squares[appleIndex].classList.add('apple');
 }
-generateApples();
+
 
 // 39 is right arrow
 // 38 is for the up arrow
@@ -88,6 +126,7 @@ function control(e) {
   }
 }
 document.addEventListener('keyup', control);
+startButton.addEventListener('click', startGame);
 //Launch Game with sound or without
 
 //Play the game
