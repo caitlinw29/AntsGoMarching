@@ -11,7 +11,7 @@ let squares = [];
 let currentSnake = [2, 1, 0];
 let direction = 1;
 const width = 10;
-let appleIndex = 0;
+let foodIndex = 0;
 let score = 0;
 let intervalTime = 1000;
 let speed = 0.9;
@@ -102,7 +102,7 @@ function startGame() {
   //remove the snake
   currentSnake.forEach(index => squares[index].classList.remove('snake'));
   //remove the apple
-  squares[appleIndex].classList.remove('apple');
+  squares[foodIndex].classList.remove('apple');
 
   clearInterval(timerId);
   currentSnake = [2,1,0];
@@ -112,7 +112,7 @@ function startGame() {
 
   direction = 1;
   intervalTime = 1000;
-  generateApples();
+  generateFood();
   //readd the class of snake to our new currentSnake
   currentSnake.forEach(index => squares[index].classList.add('snake'));
 
@@ -150,7 +150,7 @@ function move() {
     //grow our snake array (otherwise tail gets left behind)
     currentSnake.push(tail);
     //generate a new apple
-    generateApples();
+    generateFood();
     //add one to the score
     score++;
     //display our score
@@ -165,14 +165,19 @@ function move() {
 
 }
 
-
-function generateApples() {
-  //generate a random number while the number contains the snake...
-  do {
-    appleIndex = Math.floor(Math.random() * squares.length);
-  } while (squares[appleIndex].classList.contains('snake'))
-  //...then add the apple to the game when it is in a good spot
-  squares[appleIndex].classList.add('apple');
+function generateFood() {
+  foodIndex = Math.floor(Math.random() * squares.length);
+  // if (squares[currentSnake[0]].classList.contains('snake'))
+  for (let i=0; i<=99; i++) {
+    if (currentSnake[i] === foodIndex) {
+      squares[foodIndex].classList.remove('apple');
+      generateFood();
+    } else {
+      //...then add the food to the game when it is in a good spot
+      squares[foodIndex].classList.add('apple');
+    }
+  }
+  
 }
 
 
