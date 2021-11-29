@@ -101,7 +101,7 @@ button {
   width: 500px;
   height: 500px;
   border: solid 1px black;
-  margin: 10px auto;
+  margin: 50px auto;
 }
 
 .square {
@@ -109,8 +109,18 @@ button {
   height: 50px;
 }
 
+.red {
+  background-color:rgb(214, 56, 28);
+}
+
+.white {
+  background-color: white;
+}
+
 .snake {
-  background-color: green;
+  background-image: url('../images/ant-right-transparent.png');
+  background-repeat: no-repeat;
+  background-size: 50px 50px;
 }
 
 .apple {

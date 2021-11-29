@@ -55,20 +55,44 @@ function hardDifficulty() {
 startButton.addEventListener('click', startGame);
 
 function createGrid() {
-    //create 100 of these elements with a for loop
-    for (let i=0; i < width*width; i++) {
-     //create element
+  //create 100 of these elements with a for loop
+  for (let i=0; i < width*width; i++) {
+    //create element
     const square = document.createElement('div');
     //add styling to the element
     square.classList.add('square');
+    if((i>=0 && i<=9) ||(i>=20 && i<=29) || (i>=40 && i<=49) || (i>=60 && i<=69) || (i>=80 && i<=89)) {
+      redAndWhite();
+    } else {
+      whiteAndRed();
+    }
+   
     //put the element into our grid
     grid.appendChild(square);
+    
     //push it into a new squares array    
     squares.push(square);
-    }
-    
+
+    //set up checkerboard functions to be called when creating the divs
+    function redAndWhite(){
+      if( i % 2 == 0 ) {
+        square.classList.add('red');
+      } else {
+        square.classList.add('white');
+      }
+    };
+  
+    function whiteAndRed(){
+      if( i % 2 == 0 ) {
+        square.classList.add('white');
+      } else {
+        square.classList.add('red');
+      }
+    };
+  }
 };
 createGrid();
+
 
 //Colors the background of the current snake by adding the snake class to the matching index in the squares array
 currentSnake.forEach(index => squares[index].classList.add('snake'));
