@@ -62,9 +62,9 @@ function createGrid() {
     //add styling to the element
     square.classList.add('square');
     if((i>=0 && i<=9) ||(i>=20 && i<=29) || (i>=40 && i<=49) || (i>=60 && i<=69) || (i>=80 && i<=89)) {
-      redAndWhite();
+      blueAndWhite();
     } else {
-      whiteAndRed();
+      whiteAndBlue();
     }
    
     //put the element into our grid
@@ -74,19 +74,19 @@ function createGrid() {
     squares.push(square);
 
     //set up checkerboard functions to be called when creating the divs
-    function redAndWhite(){
+    function blueAndWhite(){
       if( i % 2 == 0 ) {
-        square.classList.add('red');
+        square.classList.add('blue');
       } else {
         square.classList.add('white');
       }
     };
   
-    function whiteAndRed(){
+    function whiteAndBlue(){
       if( i % 2 == 0 ) {
         square.classList.add('white');
       } else {
-        square.classList.add('red');
+        square.classList.add('blue');
       }
     };
   }
@@ -101,8 +101,8 @@ function startGame() {
   //reset variables if using button as a "restart"
   //remove the snake
   currentSnake.forEach(index => squares[index].classList.remove('snake'));
-  //remove the apple
-  squares[foodIndex].classList.remove('apple');
+  //remove the food
+  squares[foodIndex].classList.remove('food');
 
   clearInterval(timerId);
   currentSnake = [2,1,0];
@@ -142,14 +142,14 @@ function move() {
   currentSnake.unshift(currentSnake[0] + direction);
   //add styling so we can see snake
   //...but first check if snake has hit any food
-  if (squares[currentSnake[0]].classList.contains('apple')) {
-    //remove the class of apple
-    squares[currentSnake[0]].classList.remove('apple');
+  if (squares[currentSnake[0]].classList.contains('food')) {
+    //remove the class of food
+    squares[currentSnake[0]].classList.remove('food');
     //grow our snake by adding class of snake to it
     squares[tail].classList.add('snake');
     //grow our snake array (otherwise tail gets left behind)
     currentSnake.push(tail);
-    //generate a new apple
+    //generate a new food
     generateFood();
     //add one to the score
     score++;
@@ -170,11 +170,11 @@ function generateFood() {
   // if (squares[currentSnake[0]].classList.contains('snake'))
   for (let i=0; i<=99; i++) {
     if (currentSnake[i] === foodIndex) {
-      squares[foodIndex].classList.remove('apple');
+      squares[foodIndex].classList.remove('food');
       generateFood();
     } else {
       //...then add the food to the game when it is in a good spot
-      squares[foodIndex].classList.add('apple');
+      squares[foodIndex].classList.add('food');
     }
   }
   
