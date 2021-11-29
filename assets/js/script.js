@@ -1,6 +1,12 @@
 const grid = document.querySelector('.grid');
+const difficultyText = document.getElementById('difficulty-text');
+const easyButton = document.getElementById('easy');
+const mediumButton = document.getElementById('medium');
+const hardButton = document.getElementById('hard');
 const startButton = document.getElementById('start');
+const showScore = document.getElementById('score-area');
 const scoreDisplay = document.getElementById('score');
+const gameOver = document.getElementById('gameover');
 let squares = [];
 let currentSnake = [2, 1, 0];
 let direction = 1;
@@ -10,6 +16,43 @@ let score = 0;
 let intervalTime = 1000;
 let speed = 0.9;
 let timerId = 0;
+
+easyButton.addEventListener('click', easyDifficulty); 
+mediumButton.addEventListener('click', mediumDifficulty); 
+hardButton.addEventListener('click', hardDifficulty); 
+
+//applies to all three difficulties 
+function hideDifficultyShowStart() {
+  //Hide the difficulty buttons
+  easyButton.classList.add('hidden');
+  mediumButton.classList.add('hidden');
+  hardButton.classList.add('hidden');
+  difficultyText.classList.add('hidden');
+  //Show Start button
+  startButton.classList.remove('hidden');
+  showScore.classList.remove('hidden');
+  
+};
+
+function easyDifficulty() {
+  //Change variables to easy setting
+
+  hideDifficultyShowStart();
+};
+
+function mediumDifficulty() {
+  //Change variables to medium setting
+
+  hideDifficultyShowStart();
+};
+
+function hardDifficulty() {
+  //Change variables to hard setting
+
+  hideDifficultyShowStart();
+};
+
+startButton.addEventListener('click', startGame);
 
 function createGrid() {
     //create 100 of these elements with a for loop
@@ -54,7 +97,7 @@ function startGame() {
 } 
 
 function move() {
-
+  //stop game if snake hits a wall or itself 
   if (
     (currentSnake[0] + width >= width*width && direction === width) || //if snake has hit bottom
     (currentSnake[0] % width === width-1 && direction === 1) || //if snake has hit right wall
@@ -62,6 +105,7 @@ function move() {
     (currentSnake[0] - width < 0 && direction === -width) || //if snake has hit top
     squares[currentSnake[0] + direction].classList.contains('snake') //if snake runs into itself
   ) {
+    gameOver.classList.remove('hidden');
     return clearInterval(timerId);
   }
 
@@ -126,7 +170,7 @@ function control(e) {
   }
 }
 document.addEventListener('keyup', control);
-startButton.addEventListener('click', startGame);
+
 //Launch Game with sound or without
 
 //Play the game

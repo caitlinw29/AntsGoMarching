@@ -6,21 +6,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Ants Go Marching</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="assets/images/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/styles.css">
   </head>
   <body>
     <header>
-      <h1>Ants Go Marching</h1>
-      <a href="scores.html"><p>View HighScores</p></a>
+      <h1 class="inline">Ants Go Marching</h1>
+      <a href="scores.html"><p class="inline" id="scores-link">View High Scores</p></a>
     </header>
     <main>
-      <section>
-        <button id="start">Start with sound &nbsp; <img src="assets/images/volumeIcon.png" height="10%" width="10%"></button>
-        <button id="startQuiet">Start silently &nbsp; <img src="assets/images/noVolumeIcon.png" height="10%" width="10%"></button>
-        <h2>Score <span id="score">0</span></h2>
+      <section id="left">
+        <div id="buttons">
+          <p id="difficulty-text">Choose Difficulty:</p>
+          <button id="easy">Easy</button>
+          <button id="medium">Medium</button>
+          <button id="hard">Hard</button>
+          <button class="hidden" id="start">Start</button>
+        </div>
+        <p class="hidden" id="gameover">Game Over!</p>
+        <h2 class="hidden" id="score-area">Score <span id="score">0</span></h2>
       </section>
-      <div class="grid"></div>
+      <section id="right">
+        <div class="grid"></div>
+      </section>
   
     </main>
     <script src="assets/js/script.js" async defer></script>
