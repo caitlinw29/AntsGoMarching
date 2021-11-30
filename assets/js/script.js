@@ -8,6 +8,8 @@ const playAgainButton = document.getElementById('play-again');
 const showScore = document.getElementById('score-area');
 const scoreDisplay = document.getElementById('score');
 const gameOver = document.getElementById('gameover');
+const overlay = document.getElementById("overlay");
+const overlayButton = document.getElementById("overlay-button");
 let squares = [];
 let currentSnake = [2, 1, 0];
 let direction = 1;
@@ -24,10 +26,11 @@ hardButton.addEventListener('click', hardDifficulty);
 
 //applies to all three difficulties 
 function hideDifficultyShowStart() {
-  //Hide the difficulty buttons
+  //Hide the difficulty buttons and how to play button
   easyButton.classList.add('hidden');
   mediumButton.classList.add('hidden');
   hardButton.classList.add('hidden');
+  overlayButton.classList.add('hidden');
   difficultyText.classList.add('hidden');
   //Show Start button
   startButton.classList.remove('hidden');
@@ -218,5 +221,14 @@ function computerGameOnly(x) {
 var x = window.matchMedia("(max-width: 700px)")
 computerGameOnly(x) // Call listener function at run time to check size of screen
 
+function overlayOn() {
+  document.getElementById("overlay").style.display = "block";
+}
 
+function overlayOff() {
+  document.getElementById("overlay").style.display = "none";
+}
+
+overlay.addEventListener('click', overlayOff);
+overlayButton.addEventListener('click', overlayOn);
 
