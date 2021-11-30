@@ -202,6 +202,21 @@ document.addEventListener('keyup', control);
 
 //Launch Game with sound or without
 
-//Play the game
 
 //Save HighScores
+
+
+//if browser is below 700px, load a different screen
+function computerGameOnly(x) {
+  if (x.matches) { // If media query matches
+    location.assign("resize.html");
+  } else {
+    return;
+  }
+}
+
+var x = window.matchMedia("(max-width: 700px)")
+computerGameOnly(x) // Call listener function at run time to check size of screen
+
+
+
