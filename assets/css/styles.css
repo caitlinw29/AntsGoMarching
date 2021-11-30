@@ -1,6 +1,11 @@
 header, footer {
   background-color: #13338a;
   padding: 1%;
+  width: 100%;
+}
+
+header {
+  position: relative;
 }
 
 body {
@@ -29,7 +34,6 @@ p {
 a {
   text-decoration: none;
   color: rgb(237, 237, 243);
-  padding: 5px;
 }
 
 footer {
@@ -37,7 +41,6 @@ footer {
   bottom: 0;
   left: 0;
   color: #d2e2f0;
-  width: 100%;
 }
 
 #left {
@@ -51,7 +54,9 @@ footer {
 }
 
 #scores-link {
-  float: right;
+  position: absolute;
+  top: 25%;
+  right: 5%;
 } 
 
 #gameover {

@@ -34,26 +34,25 @@ function hideDifficultyShowStart() {
   difficultyText.classList.add('hidden');
   //Show Start button
   startButton.classList.remove('hidden');
-  
-};
+}
 
 function easyDifficulty() {
   //Change variables to easy setting
 
   hideDifficultyShowStart();
-};
+}
 
 function mediumDifficulty() {
   //Change variables to medium setting
 
   hideDifficultyShowStart();
-};
+}
 
 function hardDifficulty() {
   //Change variables to hard setting
 
   hideDifficultyShowStart();
-};
+}
 
 startButton.addEventListener('click', startGame);
 
@@ -69,10 +68,8 @@ function createGrid() {
     } else {
       whiteAndBlue();
     }
-   
     //put the element into our grid
     grid.appendChild(square);
-    
     //push it into a new squares array    
     squares.push(square);
 
@@ -84,7 +81,6 @@ function createGrid() {
         square.classList.add('white');
       }
     };
-  
     function whiteAndBlue(){
       if( i % 2 == 0 ) {
         square.classList.add('white');
@@ -93,10 +89,8 @@ function createGrid() {
       }
     };
   }
-};
+}
 createGrid();
-
-
 //Colors the background of the current snake by adding the snake class to the matching index in the squares array
 currentSnake.forEach(index => squares[index].classList.add('snake'));
 
@@ -104,17 +98,16 @@ function startGame() {
   //hide start button and show score
   startButton.classList.add('hidden');
   showScore.classList.remove('hidden');
-  
   //create food on map to start
   generateFood();
-
   //Starts Game Movement
   timerId = setInterval(move, intervalTime);
 } 
+
 //called in function move(), restarts the game if play again is clicked
 function startOver() {
   location.reload();
-};
+}
 
 function move() {
   //stop game if snake hits a wall or itself 
@@ -125,6 +118,16 @@ function move() {
     (currentSnake[0] - width < 0 && direction === -width) || //if snake has hit top
     squares[currentSnake[0] + direction].classList.contains('snake') //if snake runs into itself
   ) {
+    //have the ant turn to show it ran into another ant before ending game
+    if (direction === -width){
+      squares[currentSnake[0]].style.transform = 'rotate(270deg)';
+    } else if (direction === -1) {
+      squares[currentSnake[0]].style.transform = 'rotate(180deg)';
+    } else if (direction === +width) {
+      squares[currentSnake[0]].style.transform = 'rotate(90deg)';
+    } else {
+      squares[currentSnake[0]].style.transform = 'rotate(0deg)';
+    }
     //show game over text and play again button
     gameOver.classList.remove('hidden');
     playAgainButton.classList.remove('hidden');
@@ -133,18 +136,24 @@ function move() {
   }
   playAgainButton.addEventListener('click', startOver);
 
-  
   //remove last element from our currentSnake array
   const tail = currentSnake.pop();
   //remove styling from last element
   squares[tail].classList.remove('snake');
   //add sqaure in direction we are heading
   currentSnake.unshift(currentSnake[0] + direction);
- 
   //first check if snake has hit any food
   if (squares[currentSnake[0]].classList.contains('food')) {
     //remove the class of food
     squares[currentSnake[0]].classList.remove('food');
+    //turn the square in the current direction so ant is facing the right way
+    if (direction === -width){
+        squares[currentSnake[0]].style.transform = 'rotate(270deg)';
+      } else if (direction === -1) {
+        squares[currentSnake[0]].style.transform = 'rotate(180deg)';
+      } else if (direction === +width) {
+        squares[currentSnake[0]].style.transform = 'rotate(90deg)';
+      } 
     //grow our snake by adding class of snake to it
     squares[tail].classList.add('snake');
     //grow our snake array (otherwise tail gets left behind)
@@ -162,7 +171,6 @@ function move() {
   }
   //add styling so we can see snake
   squares[currentSnake[0]].classList.add('snake');
-
 }
 
 //create food in a random space where the snake is not present
@@ -176,38 +184,59 @@ function generateFood() {
       squares[foodIndex].classList.remove('food');
       generateFood();
     } else {
+      //transform to keep the strawberry upright
+      squares[foodIndex].style.transform = 'rotate(0deg)';
       //...then add the food to the game when it is in a good spot
       squares[foodIndex].classList.add('food');
     }
-  }
-  
+  } 
 }
-
-
-// 39 is right arrow
-// 38 is for the up arrow
-// 37 is for the left arrow
-// 40 is for the down arrow 
 
 //If user presses one of the direction keys, move the snake in that direction
 function control(e) {
   if (e.keyCode === 39) {
-      direction = 1;
+    //right arrow
+    for (let i=0; i<squares.length; i++){
+      if (squares[i].classList.contains('snake')){
+        continue;
+      } else {
+        squares[i].style.transform = 'rotate(0deg)';
+      }
+    }
+    direction = 1;
   } else if (e.keyCode === 38) {
+      //up arrow
+      for (let i=0; i<squares.length; i++){
+        if (squares[i].classList.contains('snake') || squares[i].classList.contains('food')){
+          continue;
+        } else {
+          squares[i].style.transform = 'rotate(270deg)';
+        }
+      }
       direction = -width;
   } else if (e.keyCode === 37) {
+      //left arrow
+      for (let i=0; i<squares.length; i++){ 
+        if (squares[i].classList.contains('snake') || squares[i].classList.contains('food')){
+          continue;
+        } else {
+          squares[i].style.transform = 'rotate(180deg)';
+        }
+      }
       direction = -1;
   } else if (e.keyCode === 40) {
+      //down arrow
+      for (let i=0; i<squares.length; i++){
+        if (squares[i].classList.contains('snake') || squares[i].classList.contains('food')){
+          continue;
+        } else {
+          squares[i].style.transform = 'rotate(90deg)';
+        }
+      }
       direction = +width;
   }
 }
 document.addEventListener('keyup', control);
-
-//Launch Game with sound or without
-
-
-//Save HighScores
-
 
 //if browser is below 700px, load a different screen
 function computerGameOnly(x) {
@@ -221,6 +250,7 @@ function computerGameOnly(x) {
 var x = window.matchMedia("(max-width: 700px)")
 computerGameOnly(x) // Call listener function at run time to check size of screen
 
+//functions to show how-to-play overlay on click of button
 function overlayOn() {
   document.getElementById("overlay").style.display = "block";
 }
@@ -231,4 +261,3 @@ function overlayOff() {
 
 overlay.addEventListener('click', overlayOff);
 overlayButton.addEventListener('click', overlayOn);
-
