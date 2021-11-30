@@ -4,6 +4,7 @@ const easyButton = document.getElementById('easy');
 const mediumButton = document.getElementById('medium');
 const hardButton = document.getElementById('hard');
 const startButton = document.getElementById('start');
+const playAgainButton = document.getElementById('play-again');
 const showScore = document.getElementById('score-area');
 const scoreDisplay = document.getElementById('score');
 const gameOver = document.getElementById('gameover');
@@ -30,7 +31,6 @@ function hideDifficultyShowStart() {
   difficultyText.classList.add('hidden');
   //Show Start button
   startButton.classList.remove('hidden');
-  showScore.classList.remove('hidden');
   
 };
 
@@ -98,27 +98,20 @@ createGrid();
 currentSnake.forEach(index => squares[index].classList.add('snake'));
 
 function startGame() {
-  //reset variables if using button as a "restart"
-  //remove the snake
-  currentSnake.forEach(index => squares[index].classList.remove('snake'));
-  //remove the food
-  squares[foodIndex].classList.remove('food');
-
-  clearInterval(timerId);
-  currentSnake = [2,1,0];
-  score = 0;
-  //re add new score to browser
-  scoreDisplay.textContent = score;
-
-  direction = 1;
-  intervalTime = 1000;
+  //hide start button and show score
+  startButton.classList.add('hidden');
+  showScore.classList.remove('hidden');
+  
+  //create food on map to start
   generateFood();
-  //readd the class of snake to our new currentSnake
-  currentSnake.forEach(index => squares[index].classList.add('snake'));
 
-  //Starts Game
+  //Starts Game Movement
   timerId = setInterval(move, intervalTime);
 } 
+//called in function move(), restarts the game if play again is clicked
+function startOver() {
+  location.reload();
+};
 
 function move() {
   //stop game if snake hits a wall or itself 
@@ -129,9 +122,13 @@ function move() {
     (currentSnake[0] - width < 0 && direction === -width) || //if snake has hit top
     squares[currentSnake[0] + direction].classList.contains('snake') //if snake runs into itself
   ) {
+    //show game over text and play again button
     gameOver.classList.remove('hidden');
+    playAgainButton.classList.remove('hidden');
+    //stop movement of snake
     return clearInterval(timerId);
   }
+  playAgainButton.addEventListener('click', startOver);
 
   
   //remove last element from our currentSnake array
@@ -140,8 +137,8 @@ function move() {
   squares[tail].classList.remove('snake');
   //add sqaure in direction we are heading
   currentSnake.unshift(currentSnake[0] + direction);
-  //add styling so we can see snake
-  //...but first check if snake has hit any food
+ 
+  //first check if snake has hit any food
   if (squares[currentSnake[0]].classList.contains('food')) {
     //remove the class of food
     squares[currentSnake[0]].classList.remove('food');
@@ -160,15 +157,18 @@ function move() {
     intervalTime = intervalTime * speed;
     timerId = setInterval(move, intervalTime);
   }
-
+  //add styling so we can see snake
   squares[currentSnake[0]].classList.add('snake');
 
 }
 
+//create food in a random space where the snake is not present
 function generateFood() {
+  //pick a random square
   foodIndex = Math.floor(Math.random() * squares.length);
-  // if (squares[currentSnake[0]].classList.contains('snake'))
+  //cycle through all 100 squares
   for (let i=0; i<=99; i++) {
+    //if the food is about to show up where there is a snake, remove the food class and redo the function
     if (currentSnake[i] === foodIndex) {
       squares[foodIndex].classList.remove('food');
       generateFood();

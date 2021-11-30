@@ -34,6 +34,7 @@ a {
 #left {
   flex: .3;
   margin-right: 20px;
+  margin-top: 80px;
 }
 
 #right {
@@ -45,8 +46,18 @@ a {
 } 
 
 #gameover {
-  font-size: 180%;
+  font-size: 250%;
   margin: 20px;
+  color:rgb(175, 34, 10);
+}
+
+#score-area {
+  margin: 10px;
+  font-size: 180%;;
+}
+
+#difficulty-text {
+  margin-bottom: 10px;
 }
 
 /* BUTTONS */
@@ -70,17 +81,19 @@ button {
   background-color: rgb(214, 56, 28);
 }
 
-#start {
-  background-color: black;
+#start, 
+#play-again {
+  background-color: #13338a;
   color: white;
   font-size: 150%;
 }
 
-#buttons > button:hover{
+#buttons > button:hover {
   background-color: white;
 }
 
-#buttons > #start:hover{
+#buttons > #start:hover, 
+#play-again:hover {
   background-color: white;
   color: black;
 }
