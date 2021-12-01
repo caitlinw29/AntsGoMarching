@@ -54,12 +54,6 @@ footer {
   flex: .7;
 }
 
-#scores-link {
-  position: absolute;
-  top: 25%;
-  right: 5%;
-} 
-
 #gameover {
   font-size: 250%;
   margin: 20px;
