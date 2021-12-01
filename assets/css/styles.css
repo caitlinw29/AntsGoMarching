@@ -194,6 +194,11 @@ button {
   background-repeat: no-repeat;
 }
 
+.owl {
+  background-image: url('../images/owl.png');
+  background-repeat: no-repeat;
+}
+
 /* SPRITES */
 
 /* ANIMATION */

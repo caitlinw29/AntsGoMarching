@@ -15,10 +15,14 @@ let currentSnake = [2, 1, 0];
 let direction = 1;
 const width = 10;
 let foodIndex = 0;
+let owlIndex = 0;
 let score = 0;
+let scoreAdjustment = 0;
 let intervalTime = 1000;
 let speed = 0.9;
 let timerId = 0;
+let owlTimer = 0;
+let owlIntervalTime = 10000;
 
 easyButton.addEventListener('click', easyDifficulty); 
 mediumButton.addEventListener('click', mediumDifficulty); 
@@ -37,20 +41,23 @@ function hideDifficultyShowStart() {
 }
 
 function easyDifficulty() {
-  //Change variables to easy setting
-
+  scoreAdjustment = 10;
   hideDifficultyShowStart();
 }
 
 function mediumDifficulty() {
   //Change variables to medium setting
-
+  owlIntervalTime = 5000;
+  intervalTime = 750;
+  scoreAdjustment = 50;
   hideDifficultyShowStart();
 }
 
 function hardDifficulty() {
   //Change variables to hard setting
-
+  owlIntervalTime = 2500;
+  intervalTime = 500;
+  scoreAdjustment = 100;
   hideDifficultyShowStart();
 }
 
@@ -100,8 +107,11 @@ function startGame() {
   showScore.classList.remove('hidden');
   //create food on map to start
   generateFood();
+  generateOwl();
   //Starts Game Movement
   timerId = setInterval(move, intervalTime);
+  //Starts Owl Timer
+  owlTimer = setInterval(generateOwl, owlIntervalTime);
 } 
 
 //called in function move(), restarts the game if play again is clicked
@@ -110,13 +120,14 @@ function startOver() {
 }
 
 function move() {
-  //stop game if snake hits a wall or itself 
+  //stop game if snake hits a wall or itself OR an owl
   if (
     (currentSnake[0] + width >= width*width && direction === width) || //if snake has hit bottom
     (currentSnake[0] % width === width-1 && direction === 1) || //if snake has hit right wall
     (currentSnake[0] % width === 0 && direction === -1) || //if snake has hit left wall
     (currentSnake[0] - width < 0 && direction === -width) || //if snake has hit top
-    squares[currentSnake[0] + direction].classList.contains('snake') //if snake runs into itself
+    squares[currentSnake[0] + direction].classList.contains('snake') || //if snake runs into itself
+    squares[currentSnake[0] + direction].classList.contains('owl') //if snake runs into owl
   ) {
     //have the ant turn to show it ran into another ant before ending game
     if (direction === -width){
@@ -132,7 +143,9 @@ function move() {
     gameOver.classList.remove('hidden');
     playAgainButton.classList.remove('hidden');
     //stop movement of snake
-    return clearInterval(timerId);
+    clearInterval(timerId); 
+    clearInterval(owlTimer);
+    return;
   }
   playAgainButton.addEventListener('click', startOver);
 
@@ -160,8 +173,8 @@ function move() {
     currentSnake.push(tail);
     //generate a new food
     generateFood();
-    //add one to the score
-    score++;
+    //add points to the score based on difficulty
+    score += scoreAdjustment;
     //display our score
     scoreDisplay.textContent = score;
     //speed up our snake
@@ -179,8 +192,8 @@ function generateFood() {
   foodIndex = Math.floor(Math.random() * squares.length);
   //cycle through all 100 squares
   for (let i=0; i<=99; i++) {
-    //if the food is about to show up where there is a snake, remove the food class and redo the function
-    if (currentSnake[i] === foodIndex) {
+    //if the food is about to show up where there is a snake or owl, remove the food class and redo the function
+    if (currentSnake[i] === foodIndex || owlIndex === foodIndex) {
       squares[foodIndex].classList.remove('food');
       generateFood();
     } else {
@@ -191,6 +204,37 @@ function generateFood() {
     }
   } 
 }
+
+//create an owl
+function generateOwl() {
+  //pick a random square
+  owlIndex = Math.floor(Math.random() * squares.length);
+  //cycle through all 100 squares
+  for (let i=0; i<=99; i++) {
+    //remove old owl, and turn the square in the correct direction 
+    //square won't fix itself otherwise until a key is pressed
+    if (squares[i].classList.contains('owl')) {
+      squares[i].classList.remove('owl');
+      if (direction === -width){
+        squares[i].style.transform = 'rotate(270deg)';
+      } else if (direction === -1) {
+        squares[i].style.transform = 'rotate(180deg)';
+      } else if (direction === +width) {
+        squares[i].style.transform = 'rotate(90deg)';
+      } 
+    }
+    //if the owl is about to show up where there is a snake or food, remove the owl class and redo the function
+    if (currentSnake[i] === owlIndex || foodIndex === owlIndex) {
+      squares[owlIndex].classList.remove('owl');
+      generateOwl();
+    } else {
+      //transform to keep the owl upright
+      squares[owlIndex].style.transform = 'rotate(0deg)';
+      //...then add the owl to the game when it is in a good spot
+      squares[owlIndex].classList.add('owl');
+    }
+  } 
+} 
 
 //If user presses one of the direction keys, move the snake in that direction
 function control(e) {
@@ -207,7 +251,7 @@ function control(e) {
   } else if (e.keyCode === 38) {
       //up arrow
       for (let i=0; i<squares.length; i++){
-        if (squares[i].classList.contains('snake') || squares[i].classList.contains('food')){
+        if (squares[i].classList.contains('snake') || squares[i].classList.contains('food') || squares[i].classList.contains('owl')){
           continue;
         } else {
           squares[i].style.transform = 'rotate(270deg)';
@@ -217,7 +261,7 @@ function control(e) {
   } else if (e.keyCode === 37) {
       //left arrow
       for (let i=0; i<squares.length; i++){ 
-        if (squares[i].classList.contains('snake') || squares[i].classList.contains('food')){
+        if (squares[i].classList.contains('snake') || squares[i].classList.contains('food') || squares[i].classList.contains('owl')){
           continue;
         } else {
           squares[i].style.transform = 'rotate(180deg)';
@@ -227,7 +271,7 @@ function control(e) {
   } else if (e.keyCode === 40) {
       //down arrow
       for (let i=0; i<squares.length; i++){
-        if (squares[i].classList.contains('snake') || squares[i].classList.contains('food')){
+        if (squares[i].classList.contains('snake') || squares[i].classList.contains('food') || squares[i].classList.contains('owl')){
           continue;
         } else {
           squares[i].style.transform = 'rotate(90deg)';
