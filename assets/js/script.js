@@ -10,10 +10,10 @@ const scoreDisplay = document.getElementById('score');
 const gameOver = document.getElementById('gameover');
 const overlay = document.getElementById("overlay");
 const overlayButton = document.getElementById("overlay-button");
+const width = 10;
 let squares = [];
 let currentSnake = [2, 1, 0];
 let direction = 1;
-const width = 10;
 let foodIndex = 0;
 let owlIndex = 0;
 let score = 0;
@@ -30,7 +30,7 @@ hardButton.addEventListener('click', hardDifficulty);
 
 //applies to all three difficulties 
 function hideDifficultyShowStart() {
-  //Hide the difficulty buttons and how to play button
+  //Hide the difficulty buttons, how to play button, and choose your difficulty text
   easyButton.classList.add('hidden');
   mediumButton.classList.add('hidden');
   hardButton.classList.add('hidden');
@@ -63,6 +63,7 @@ function hardDifficulty() {
 
 startButton.addEventListener('click', startGame);
 
+//create the grid (picnic blanket)
 function createGrid() {
   //create 100 of these elements with a for loop
   for (let i=0; i < width*width; i++) {
@@ -70,6 +71,7 @@ function createGrid() {
     const square = document.createElement('div');
     //add styling to the element
     square.classList.add('square');
+    //checkerboard pattern
     if((i>=0 && i<=9) ||(i>=20 && i<=29) || (i>=40 && i<=49) || (i>=60 && i<=69) || (i>=80 && i<=89)) {
       blueAndWhite();
     } else {
@@ -105,7 +107,7 @@ function startGame() {
   //hide start button and show score
   startButton.classList.add('hidden');
   showScore.classList.remove('hidden');
-  //create food on map to start
+  //create food and owl on map to start
   generateFood();
   generateOwl();
   //Starts Game Movement
@@ -120,7 +122,7 @@ function startOver() {
 }
 
 function move() {
-  //stop game if snake hits a wall or itself OR an owl
+  //stop game if snake hits a wall OR itself OR an owl
   if (
     (currentSnake[0] + width >= width*width && direction === width) || //if snake has hit bottom
     (currentSnake[0] % width === width-1 && direction === 1) || //if snake has hit right wall
@@ -129,7 +131,7 @@ function move() {
     squares[currentSnake[0] + direction].classList.contains('snake') || //if snake runs into itself
     squares[currentSnake[0] + direction].classList.contains('owl') //if snake runs into owl
   ) {
-    //have the ant turn to show it ran into another ant before ending game
+    //have the ant turn around to show it ran into another ant before ending game
     if (direction === -width){
       squares[currentSnake[0]].style.transform = 'rotate(270deg)';
     } else if (direction === -1) {
@@ -142,7 +144,7 @@ function move() {
     //show game over text and play again button
     gameOver.classList.remove('hidden');
     playAgainButton.classList.remove('hidden');
-    //stop movement of snake
+    //stop movement of snake and owl timer
     clearInterval(timerId); 
     clearInterval(owlTimer);
     return;
@@ -190,8 +192,8 @@ function move() {
 function generateFood() {
   //pick a random square
   foodIndex = Math.floor(Math.random() * squares.length);
-  //cycle through all 100 squares
-  for (let i=0; i<=99; i++) {
+  //cycle through all squares
+  for (let i=0; i < width*width; i++) {
     //if the food is about to show up where there is a snake or owl, remove the food class and redo the function
     if (currentSnake[i] === foodIndex || owlIndex === foodIndex) {
       squares[foodIndex].classList.remove('food');
@@ -210,7 +212,7 @@ function generateOwl() {
   //pick a random square
   owlIndex = Math.floor(Math.random() * squares.length);
   //cycle through all 100 squares
-  for (let i=0; i<=99; i++) {
+  for (let i=0; i < width*width; i++) {
     //remove old owl, and turn the square in the correct direction 
     //square won't fix itself otherwise until a key is pressed
     if (squares[i].classList.contains('owl')) {
@@ -240,46 +242,63 @@ function generateOwl() {
 function control(e) {
   if (e.keyCode === 39) {
     //right arrow
+    //for all squares...
     for (let i=0; i<squares.length; i++){
+      //if the current square contains snake class, continue
       if (squares[i].classList.contains('snake')){
         continue;
       } else {
+        //else transform the rest of the squares to have the ants face right 
         squares[i].style.transform = 'rotate(0deg)';
       }
     }
+    //change the snake's direction to be facing right
     direction = 1;
   } else if (e.keyCode === 38) {
       //up arrow
+      //for all squares...
       for (let i=0; i<squares.length; i++){
+        //if the current square contains snake, food, or owl class, continue
         if (squares[i].classList.contains('snake') || squares[i].classList.contains('food') || squares[i].classList.contains('owl')){
           continue;
         } else {
+          //else transform the rest of the squares to have the ants face up
           squares[i].style.transform = 'rotate(270deg)';
         }
       }
+      //change the snake's direction to be facing up
       direction = -width;
   } else if (e.keyCode === 37) {
       //left arrow
+      //for all squares...
       for (let i=0; i<squares.length; i++){ 
+        //if the current square contains snake, food, or owl class, continue
         if (squares[i].classList.contains('snake') || squares[i].classList.contains('food') || squares[i].classList.contains('owl')){
           continue;
         } else {
+          //else transform the rest of the squares to have the ants face left
           squares[i].style.transform = 'rotate(180deg)';
         }
       }
+      //change the snake's direction to be facing left
       direction = -1;
   } else if (e.keyCode === 40) {
       //down arrow
+      //for all squares...
       for (let i=0; i<squares.length; i++){
+        //if the current square contains snake, food, or owl class, continue
         if (squares[i].classList.contains('snake') || squares[i].classList.contains('food') || squares[i].classList.contains('owl')){
           continue;
         } else {
+          //else transform the rest of the squares to have the ants face down
           squares[i].style.transform = 'rotate(90deg)';
         }
       }
+      //change the snake's direction to be facing down
       direction = +width;
   }
 }
+//listen for key-up to respond to arrow keys being pressed
 document.addEventListener('keyup', control);
 
 //if browser is below 700px, load a different screen
@@ -290,7 +309,6 @@ function computerGameOnly(x) {
     return;
   }
 }
-
 var x = window.matchMedia("(max-width: 700px)")
 computerGameOnly(x) // Call listener function at run time to check size of screen
 
