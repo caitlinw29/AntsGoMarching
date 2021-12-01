@@ -118,7 +118,7 @@ function startGame() {
 
 //called in function move(), restarts the game if play again is clicked
 function startOver() {
-  location.reload();
+  location.assign("index.html");
 }
 
 function move() {
