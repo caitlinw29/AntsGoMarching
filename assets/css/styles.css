@@ -1,3 +1,4 @@
+/* General and Positioning */ 
 header, footer {
   background-color: #13338a;
   padding: 1%;
@@ -74,6 +75,7 @@ footer {
   margin-bottom: 10px;
 }
 
+/* OVERLAY */
 #overlay {
   position: fixed; /* Sit on top of the page content */
   display: none; /* Hidden by default */
@@ -92,10 +94,17 @@ footer {
   position: absolute;
   top: 50%;
   left: 50%;
-  font-size: 50px;
+  font-size: 180%;
   color: white;
   transform: translate(-50%,-50%);
   -ms-transform: translate(-50%,-50%);
+  background-color: rgba(0,0,0,0.75);
+  text-align: center;
+  padding: 1%;
+}
+
+#overlay-text > p {
+  padding: 2%;
 }
 
 /* BUTTONS */
@@ -183,6 +192,7 @@ button {
   background-color: white;
 }
 
+/* SPRITES */
 .snake {
   background-image: url('../images/ant-right-transparent.png');
   background-repeat: no-repeat;
@@ -198,11 +208,3 @@ button {
   background-image: url('../images/owl.png');
   background-repeat: no-repeat;
 }
-
-/* SPRITES */
-
-/* ANIMATION */
-
-/* SOUNDS */
-
-/* MEDIA QUERIES */
